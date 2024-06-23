@@ -7,12 +7,12 @@ const mongoose = require("mongoose")
 let indexRouter = require('./routes/index');
 let usersRouter = require('./routes/users');
 const bodyParser = require("body-parser");
-const uri = "mongodb+srv://kishor:Durva@cluster0.mirndhq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
-// const uri = "mongodb://127.0.0.1:27017/test"
+// const uri = "mongodb+srv://kishor:Durva@cluster0.mirndhq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const uri = "mongodb://127.0.0.1:27017/test"
 const swagger = require('./swagger')
 let app = express();
 const toDoRoute = require('./routes/toDos')
-const {createUser,loginUser,authMiddleware} = require("./controllers/user")
+const { createUser, loginUser, authMiddleware } = require("./controllers/user")
 // view engine setup
 
 
@@ -67,7 +67,7 @@ app.use('/users', usersRouter);
  *      '200':
  *        description: A successful response
  */
-app.use("/todo",authMiddleware, toDoRoute)
+app.use("/todo", authMiddleware, toDoRoute)
 swagger(app)
 
 // catch 404 and forward to error handler

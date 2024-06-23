@@ -47,9 +47,13 @@ const loginUser = async (req, res, next) => {
         return res.status(401).send('Invalid username or password');
     }
 
-    const token = jwt.sign({ userId: user._id, username: user.username }, JWT_SECRET, { expiresIn: '1h' });
-
-    res.send({ token });
+    const token = jwt.sign({ userId: user._id, username: user.name }, JWT_SECRET, { expiresIn: '1h' });
+    let userDetails = {
+        name: user.name,
+        email: user.email,
+        id: user._id
+    }
+    res.send({ token, userDetails });
 }
 
 const authMiddleware = (req, res, next) => {
@@ -65,10 +69,59 @@ const authMiddleware = (req, res, next) => {
 
         next();
     } catch (error) {
-        console.log(token, jwt.verify(token, JWT_SECRET))
+
         res.status(401).send('Invalid token');
     }
 };
 
 
-module.exports = { createUser, loginUser, authMiddleware }
+const updateUser = async (req, res, next) => {
+    let a = req.params.id
+
+    try {
+        const { name, email, oldPassword, password, id } = req.body;
+        if (!name || !email) {
+            return res.status(400).send("Please fill email and name !!!")
+        }
+        if (!oldPassword && !password) {
+            await User.findByIdAndUpdate(id, { email, name })
+            let user = await User.findById(id)
+            let userDetails = {
+                name: user.name,
+                email: user.email,
+                id: user._id
+            }
+            return res.status(200).send(userDetails);
+        }
+        if (!oldPassword) {
+            return res.status(400).send("Please fill Old Password ");
+        }
+        if (!password) {
+            return res.status(400).send("Please fill New Password ");
+        }
+        const user = await User.findById(id);
+        const isMatch = await bcrypt.compare(oldPassword, user.password);
+
+        if (isMatch) {
+            const hashedPassword = await bcrypt.hash(password, 10);
+            await User.findByIdAndUpdate(id, { email, name, password: hashedPassword })
+            let user = await User.findById(id)
+            console.log(user, "uuuuuu")
+            let userDetails = {
+                name: user.name,
+                email: user.email,
+                id: user._id
+            }
+            return res.status(200).send(userDetails);
+        } else {
+            return res.status(400).send("Old Password is invalid.Please input proper old password ");
+        }
+
+ 
+
+    } catch (err) {
+        err.errorResponse.code == 11000 && res.status(409).send("Email Already Exists")
+        next(err)
+    }
+}
+module.exports = { createUser, loginUser, authMiddleware, updateUser }

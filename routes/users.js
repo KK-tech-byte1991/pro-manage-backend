@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const {createUser,loginUser} = require("../controllers/user")
+const { createUser, loginUser, updateUser } = require("../controllers/user")
 /* GET users listing. */
 
 
@@ -14,15 +14,15 @@ const {createUser,loginUser} = require("../controllers/user")
  *         description: A simple message
  */
 
-router.get('/', function(req, res, next) {
+router.get('/', function (req, res, next) {
   res.send('respond with a ');
 });
 
 
+router.post("/create", createUser)
 
-router.post("/create",createUser)
+router.post("/login", loginUser)
 
-router.post("/login",loginUser)
+router.post("/updateUser", updateUser)
 
 module.exports = router;
- 
