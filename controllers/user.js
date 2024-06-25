@@ -23,7 +23,8 @@ const createUser = async (req, res, next) => {
         res.status(201).send("User Registered Successfully");
 
     } catch (err) {
-
+        console.log("eeeee", err)
+        response.status(409).send(err)
         err.errorResponse.code == 11000 && res.status(409).send("Email Already Exists")
         next(err)
     }
@@ -117,7 +118,7 @@ const updateUser = async (req, res, next) => {
             return res.status(400).send("Old Password is invalid.Please input proper old password ");
         }
 
- 
+
 
     } catch (err) {
         err.errorResponse.code == 11000 && res.status(409).send("Email Already Exists")
