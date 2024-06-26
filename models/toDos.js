@@ -1,22 +1,34 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const checkList = new Schema({
+    title: {
+        type: String,
+        required: true,
+       
+    },
+    status: {
+        type:String,
+        required:true
+    }
+})
 const toDoSchema = new Schema({
     toDoName: {
         type: String,
         required: true
     },
     toDoPriority: {
-        type: Number,
+        type: String,
         required: true,
-    },
-    startTime: {
-        type: Date,
-        required: true
     },
     endTime: {
         type: Date,
         required: true
-    }
+    },
+    assignedTo: {
+        type: String
+    },
+    checkLists: [checkList]
+
 });
 
 module.exports = mongoose.model("ToDos", toDoSchema);

@@ -1,5 +1,5 @@
 const ToDos = require("../models/toDos");
-const Kitten = require("../models/kitten")
+
 
 
 const deleteToDo = async (req, res, next) => {
@@ -17,25 +17,21 @@ const deleteToDo = async (req, res, next) => {
 }
 const editToDos = async (req, res, next) => {
     let a = req.params.id
-    // console.log("aaaaaaa",a,req)
+   
 
     try {
-        const { toDoName, toDoPriority, startTime, endTime } = req.body;
-        console.log(toDoName, toDoPriority, startTime, endTime)
-        if (!toDoName || !toDoPriority || !startTime || !endTime) {
+        const { toDoName, toDoPriority, endTime, assignedTo, checkLists } = req.body;
+        console.log(toDoName, toDoPriority, endTime, assignedTo, checkLists)
+
+        if (!toDoName || !toDoPriority || !endTime) {
             return res.status(400).send("Please fill all the fields!!!")
         }
+
         const newToDo = new ToDos({
-            toDoName,
-            toDoPriority,
-            startTime,
-            endTime
+            toDoName, toDoPriority, endTime, assignedTo, checkLists
         })
         await ToDos.findByIdAndUpdate(a, {
-            toDoName,
-            toDoPriority,
-            startTime,
-            endTime
+            toDoName, toDoPriority, endTime, assignedTo, checkLists
         })
 
         res.status(200).send("Updated Successfully");
@@ -47,17 +43,18 @@ const editToDos = async (req, res, next) => {
 const addToDos = async (req, res, next) => {
 
     try {
-        const { toDoName, toDoPriority, startTime, endTime } = req.body;
-        console.log(toDoName, toDoPriority, startTime, endTime)
-        if (!toDoName || !toDoPriority || !startTime || !endTime) {
-            return res.status(400).send("Please fill all the fields!!!")
+        const { toDoName, toDoPriority, endTime, assignedTo, checkLists } = req.body;
+        console.log(toDoName, toDoPriority, endTime)
+        if (!toDoName || !toDoPriority || !endTime) {
+            return res.status(400).send("Please fill all the required fields!!!")
         }
-       
+
         const newToDo = new ToDos({
             toDoName,
             toDoPriority,
-            startTime,
-            endTime
+            endTime,
+            assignedTo,
+            checkLists
         })
 
         await newToDo.save();
