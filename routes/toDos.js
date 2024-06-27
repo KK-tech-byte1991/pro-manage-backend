@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const { addToDos, getAllToDos ,editToDos,deleteToDo} = require("../controllers/toDo")
+const { addToDos, getAllToDos, editToDos, deleteToDo, getToDoByUserId } = require("../controllers/toDo")
 /**
  * @swagger
  * /users:
@@ -35,8 +35,10 @@ router.post("/create", addToDos)
  */
 router.get("/all", getAllToDos)
 
-router.put("/edit/:id",editToDos)
+router.get("/all/user/:id", getToDoByUserId)
 
-router.delete("/delete/:id",deleteToDo)
+router.put("/edit/:id", editToDos)
+
+router.delete("/delete/:id", deleteToDo)
 
 module.exports = router;

@@ -1,16 +1,18 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+
 const checkList = new Schema({
     title: {
         type: String,
         required: true,
-       
+
     },
     status: {
-        type:String,
-        required:true
+        type: String,
+        required: true
     }
 })
+
 const toDoSchema = new Schema({
     toDoName: {
         type: String,
@@ -27,7 +29,12 @@ const toDoSchema = new Schema({
     assignedTo: {
         type: String
     },
-    checkLists: [checkList]
+    createdBy: {
+        type: String,
+        required: true
+    },
+    checkLists: [checkList],
+    
 
 });
 
