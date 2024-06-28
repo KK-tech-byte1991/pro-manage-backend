@@ -7,8 +7,8 @@ const mongoose = require("mongoose")
 let indexRouter = require('./routes/index');
 let usersRouter = require('./routes/users');
 const bodyParser = require("body-parser");
-const uri = "mongodb+srv://kishor:Durva@cluster0.mirndhq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
-// const uri = "mongodb://127.0.0.1:27017/test"
+// const uri = "mongodb+srv://kishor:Durva@cluster0.mirndhq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const uri = "mongodb://127.0.0.1:27017/test"
 const swagger = require('./swagger')
 let app = express();
 const toDoRoute = require('./routes/toDos')

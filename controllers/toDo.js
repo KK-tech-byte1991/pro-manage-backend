@@ -20,18 +20,18 @@ const editToDos = async (req, res, next) => {
 
 
     try {
-        const { toDoName, toDoPriority, endTime, assignedTo, checkLists, createdBy } = req.body;
-        console.log(toDoName, toDoPriority, endTime, assignedTo, checkLists, createdBy)
+        const { toDoName, toDoPriority, endTime, assignedTo, checkList, createdBy, status } = req.body;
+        console.log(toDoName, toDoPriority, endTime, assignedTo, checkList, createdBy)
 
         if (!toDoName || !toDoPriority || !endTime) {
             return res.status(400).send("Please fill all the fields!!!")
         }
 
         const newToDo = new ToDos({
-            toDoName, toDoPriority, endTime, assignedTo, checkLists, createdBy
+            toDoName, toDoPriority, endTime, assignedTo, checkList, createdBy, status
         })
         await ToDos.findByIdAndUpdate(a, {
-            toDoName, toDoPriority, endTime, assignedTo, checkLists, createdBy
+            toDoName, toDoPriority, endTime, assignedTo, checkList, createdBy, status
         })
 
         res.status(200).send("Updated Successfully");
@@ -43,8 +43,8 @@ const editToDos = async (req, res, next) => {
 const addToDos = async (req, res, next) => {
 
     try {
-        const { toDoName, toDoPriority, endTime, assignedTo, checkList, createdBy ,status} = req.body;
-        console.log(toDoName, toDoPriority, endTime, assignedTo, checkList, createdBy,checkList)
+        const { toDoName, toDoPriority, endTime, assignedTo, checkList, createdBy, status } = req.body;
+        console.log(toDoName, toDoPriority, endTime, assignedTo, checkList, createdBy, checkList)
         if (!toDoName || !toDoPriority || !endTime) {
             return res.status(400).send("Please fill all the required fields!!!")
         }
@@ -84,8 +84,8 @@ const getToDoByUserId = async (req, res, next) => {
 
     try {
 
-        const todos = await ToDos.find().or([{assignedTo:a},{createdBy:a}])
-            
+        const todos = await ToDos.find().or([{ assignedTo: a }, { createdBy: a }])
+
         res.status(200).send(todos)
 
     } catch (error) {
@@ -93,7 +93,7 @@ const getToDoByUserId = async (req, res, next) => {
     }
 
 
-    
+
 }
 
 module.exports = { addToDos, getAllToDos, editToDos, deleteToDo, getToDoByUserId }
