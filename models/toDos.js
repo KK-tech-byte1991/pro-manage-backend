@@ -33,7 +33,11 @@ const toDoSchema = new Schema({
         type: String,
         required: true
     },
-    checkLists: [checkList],
+    status:{
+        type:String,
+        required:true
+    },
+    checkList: [checkList],
     
 
 });

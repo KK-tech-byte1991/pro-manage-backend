@@ -43,8 +43,8 @@ const editToDos = async (req, res, next) => {
 const addToDos = async (req, res, next) => {
 
     try {
-        const { toDoName, toDoPriority, endTime, assignedTo, checkLists, createdBy } = req.body;
-        console.log(toDoName, toDoPriority, endTime, assignedTo, checkLists, createdBy)
+        const { toDoName, toDoPriority, endTime, assignedTo, checkList, createdBy ,status} = req.body;
+        console.log(toDoName, toDoPriority, endTime, assignedTo, checkList, createdBy,checkList)
         if (!toDoName || !toDoPriority || !endTime) {
             return res.status(400).send("Please fill all the required fields!!!")
         }
@@ -55,7 +55,8 @@ const addToDos = async (req, res, next) => {
             endTime,
             assignedTo,
             createdBy,
-            checkLists,
+            checkList,
+            status
 
         })
 
