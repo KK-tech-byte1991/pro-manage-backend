@@ -1,15 +1,23 @@
 var express = require('express');
 var router = express.Router();
-
+const ToDos = require("../models/toDos");
 const { createUser, loginUser, updateUser } = require("../controllers/user")
 
 
 
+const getToDo = async (req, res, next) => {
+  let a = req.params.id
 
 
-router.get('/', function (req, res, next) {
-  res.send('respond with a ');
-});
+  try {
+    let todo = await ToDos.findById(a)
+    res.status(200).send(todo);
+  } catch (error) {
+
+  }
+}
+
+router.get('/task/:id', getToDo);
 
 
 router.post("/create", createUser)

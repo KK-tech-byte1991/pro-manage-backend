@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const { addToDos, getAllToDos, editToDos, deleteToDo, getToDoByUserId } = require("../controllers/toDo")
+const { addToDos, getAllToDos, editToDos, deleteToDo, getToDoByUserId, getToDo } = require("../controllers/toDo")
 /**
  * @swagger
  * /users:
@@ -34,6 +34,8 @@ router.post("/create", addToDos)
  *        description: A successful response
  */
 router.get("/all", getAllToDos)
+
+router.get("/:id", getToDo)
 
 router.get("/all/user/:id", getToDoByUserId)
 

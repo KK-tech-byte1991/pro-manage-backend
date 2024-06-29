@@ -1,7 +1,17 @@
 const ToDos = require("../models/toDos");
 
 
+const getToDo = async (req, res, next) => {
+    let a = req.params.id
+    // console.log("aaaaaaa",a,req)
 
+    try {
+        let todo= await ToDos.findById(a)
+        res.status(200).send(todo);
+    } catch (error) {
+
+    }
+}
 const deleteToDo = async (req, res, next) => {
     let a = req.params.id
     // console.log("aaaaaaa",a,req)
@@ -96,4 +106,4 @@ const getToDoByUserId = async (req, res, next) => {
 
 }
 
-module.exports = { addToDos, getAllToDos, editToDos, deleteToDo, getToDoByUserId }
+module.exports = { addToDos, getAllToDos, editToDos, deleteToDo, getToDoByUserId ,getToDo}
