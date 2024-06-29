@@ -24,22 +24,27 @@ const addUserToBoard = async (req, res, next) => {
         let user = await User.findOne({ email });
         let affilitationToBeAdded
         let affiliation = board.affiliation
-        if (user) {
-
-            affilitationToBeAdded = { id: user.id, email: user.email }
-
+        console.log("////",affiliation.find((aff) => aff.email == email))
+        if (affiliation.find((aff) => aff.email == email)) {
+            res.status(200).send("Email Already Exists.")
         } else {
-            affilitationToBeAdded = { email: email }
+            if (user) {
+
+                affilitationToBeAdded = { id: user.id, email: user.email }
+
+            } else {
+                affilitationToBeAdded = { email: email }
+            }
+
+            affiliation.push(affilitationToBeAdded)
+            board.affiliation = affiliation
+
+            await Board.findByIdAndUpdate(boardId, board)
+            res.status(200).send("Email Added Successfully");
         }
 
-        affiliation.push(affilitationToBeAdded)
-        board.affiliation = affiliation
-
-        await Board.findByIdAndUpdate(boardId, board)
-        res.status(200).send("Email Added Successfully");
-
     } catch (error) {
-
+console.log(error)
     }
 
 }

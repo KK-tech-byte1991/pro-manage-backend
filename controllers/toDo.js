@@ -1,12 +1,12 @@
 const ToDos = require("../models/toDos");
-
+const User = require("../models/users");
 
 const getToDo = async (req, res, next) => {
     let a = req.params.id
     // console.log("aaaaaaa",a,req)
 
     try {
-        let todo= await ToDos.findById(a)
+        let todo = await ToDos.findById(a)
         res.status(200).send(todo);
     } catch (error) {
 
@@ -91,10 +91,11 @@ const getAllToDos = async (req, res, next) => {
 
 const getToDoByUserId = async (req, res, next) => {
     let a = req.params.id
-
+    let user = await User.findById(a)
+ 
     try {
 
-        const todos = await ToDos.find().or([{ assignedTo: a }, { createdBy: a }])
+        const todos = await ToDos.find().or([{ assignedTo: a }, { createdBy: a }, { assignedTo:user.email}])
 
         res.status(200).send(todos)
 
@@ -106,4 +107,4 @@ const getToDoByUserId = async (req, res, next) => {
 
 }
 
-module.exports = { addToDos, getAllToDos, editToDos, deleteToDo, getToDoByUserId ,getToDo}
+module.exports = { addToDos, getAllToDos, editToDos, deleteToDo, getToDoByUserId, getToDo }
