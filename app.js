@@ -6,14 +6,15 @@ let logger = require('morgan');
 const mongoose = require("mongoose")
 let indexRouter = require('./routes/index');
 let usersRouter = require('./routes/users');
+let boardRouter = require("./routes/board")
 const bodyParser = require("body-parser");
 const uri = "mongodb+srv://kishor:Durva@cluster0.mirndhq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 // const uri = "mongodb://127.0.0.1:27017/test"
 const swagger = require('./swagger')
 let app = express();
 const toDoRoute = require('./routes/toDos')
-const { createUser, loginUser, authMiddleware } = require("./controllers/user")
-// view engine setup
+const { authMiddleware } = require("./controllers/user")
+
 
 
 let cors = require('cors');
@@ -33,44 +34,21 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-/**
- * @swagger
- * /:
- *   get:
- *     summary: Returns a simple message
- *     responses:
- *       200:
- *         description: A simple message
- */
 
 app.get('/', (req, res) => {
   res.send('Hello World!');
 });
-// app.use('/', indexRouter);
 
-/**
- * @swagger
- * /users:
- *  get:
- *    description: Use to request all users
- *    responses:
- *      '200':
- *        description: A successful response
- */
+
+
 app.use('/users', usersRouter);
-/**
- * @swagger
- * /users:
- *  get:
- *    description: Use to request all toddos
- *    responses:
- *      '200':
- *        description: A successful response
- */
+
 app.use("/todo", authMiddleware, toDoRoute)
+
+app.use("/board", authMiddleware, boardRouter)
 swagger(app)
 
-// catch 404 and forward to error handler
+
 app.use(function (req, res, next) {
   next(createError(404));
 });

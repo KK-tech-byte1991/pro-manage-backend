@@ -1,5 +1,6 @@
 require('dotenv').config();
 const User = require("../models/users");
+const Board = require("../models/board")
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -19,12 +20,20 @@ const createUser = async (req, res, next) => {
             password: hashedPassword
         })
 
-        await newUser.save();
+        let a = await newUser.save();
+        console.log("user Created", a.id)
+        
+        const newBoard = new Board({
+            owner: a.id,
+            affiliation: []
+        })
+        await newBoard.save()
         res.status(201).send("User Registered Successfully");
+        
 
     } catch (err) {
         console.log("eeeee", err)
-        response.status(409).send(err)
+
         err.errorResponse.code == 11000 && res.status(409).send("Email Already Exists")
         next(err)
     }
@@ -33,7 +42,7 @@ const createUser = async (req, res, next) => {
 
 
 const loginUser = async (req, res, next) => {
-    
+
     const { email, password } = req.body;
 
 
