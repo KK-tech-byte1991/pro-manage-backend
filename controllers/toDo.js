@@ -3,8 +3,6 @@ const User = require("../models/users");
 
 const getToDo = async (req, res, next) => {
     let a = req.params.id
-    // console.log("aaaaaaa",a,req)
-
     try {
         let todo = await ToDos.findById(a)
         res.status(200).send(todo);
@@ -14,11 +12,7 @@ const getToDo = async (req, res, next) => {
 }
 const deleteToDo = async (req, res, next) => {
     let a = req.params.id
-    // console.log("aaaaaaa",a,req)
-
     try {
-
-
         await ToDos.findByIdAndDelete(a)
         res.status(200).send("Deleted Successfully");
     } catch (error) {
@@ -37,16 +31,14 @@ const editToDos = async (req, res, next) => {
             return res.status(400).send("Please fill all the fields!!!")
         }
 
-        const newToDo = new ToDos({
-            toDoName, toDoPriority, endTime, assignedTo, checkList, createdBy, status
-        })
+
         await ToDos.findByIdAndUpdate(a, {
             toDoName, toDoPriority, endTime, assignedTo, checkList, createdBy, status
         })
 
         res.status(200).send("Updated Successfully");
     } catch (error) {
-
+        console.log("error", error)
     }
 }
 
@@ -88,14 +80,41 @@ const getAllToDos = async (req, res, next) => {
 
     }
 }
-
+function normalizeToDate(date) {
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+}
 const getToDoByUserId = async (req, res, next) => {
-    let a = req.params.id
-    let user = await User.findById(a)
+
+    let userId = req.params.id
+    let filter = req.query.filter
+
+    let user = await User.findById(userId)
 
     try {
 
-        const todos = await ToDos.find().or([{ assignedTo: a }, { createdBy: a }, { assignedTo: user.email }])
+        const normalizedDate = normalizeToDate(new Date())
+        const nextDay = new Date(normalizedDate);
+
+        if (filter == "today") {
+            nextDay.setDate(normalizedDate.getDate() + 1);
+        }
+        else if (filter == "month") {
+            nextDay.setDate(normalizedDate.getDate() + 30);
+        } else {
+            nextDay.setDate(normalizedDate.getDate() + 7);
+        }
+
+        console.log(normalizedDate, nextDay);
+
+        const todos = await ToDos.find()
+            .or([{ assignedTo: userId }, { createdBy: userId }, { assignedTo: user.email }])
+            .and([{
+                endTime: {
+                    $gte: normalizedDate,
+                    $lt: nextDay
+                }
+            }])
+
 
 
 
@@ -146,7 +165,7 @@ const getAnalytics = async (req, res, next) => {
     } catch (error) {
         console.log(error)
     }
- 
+
 
 
 }
