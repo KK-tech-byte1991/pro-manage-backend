@@ -92,10 +92,12 @@ const getAllToDos = async (req, res, next) => {
 const getToDoByUserId = async (req, res, next) => {
     let a = req.params.id
     let user = await User.findById(a)
- 
+
     try {
 
-        const todos = await ToDos.find().or([{ assignedTo: a }, { createdBy: a }, { assignedTo:user.email}])
+        const todos = await ToDos.find().or([{ assignedTo: a }, { createdBy: a }, { assignedTo: user.email }])
+
+
 
         res.status(200).send(todos)
 
@@ -107,4 +109,46 @@ const getToDoByUserId = async (req, res, next) => {
 
 }
 
-module.exports = { addToDos, getAllToDos, editToDos, deleteToDo, getToDoByUserId, getToDo }
+const getAnalytics = async (req, res, next) => {
+    let a = req.params.id
+    let user = await User.findById(a)
+
+    try {
+
+        const todos = await ToDos.find().or([{ assignedTo: a }, { createdBy: a }, { assignedTo: user.email }])
+
+        let BACKLOG = 0;
+        let TODO = 0;
+        let INPROGRESS = 0;
+        let DONE = 0;
+        let HIGH = 0;
+        let LOW = 0;
+        let MODERATE = 0;
+        let DUE = 0;
+
+        todos.map((task) => {
+            task.status == "BACKLOG" && ++BACKLOG
+            task.status == "TODO" && ++TODO
+            task.status == "INPROGRESS" && ++INPROGRESS
+            task.status == "DONE" && ++DONE
+            task.toDoPriority == "HIGH" && ++HIGH
+            task.toDoPriority == "MODERATE" && ++MODERATE
+            task.toDoPriority == "LOW" && ++LOW
+            task.dueDate?.length > 0 && ++DUE
+        })
+
+        let analytics = {
+            BACKLOG, TODO, INPROGRESS, DONE, HIGH, LOW, MODERATE, DUE
+        }
+
+        res.status(200).send(analytics)
+
+    } catch (error) {
+        console.log(error)
+    }
+ 
+
+
+}
+
+module.exports = { addToDos, getAllToDos, editToDos, deleteToDo, getToDoByUserId, getToDo, getAnalytics }
