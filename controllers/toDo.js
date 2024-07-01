@@ -25,7 +25,7 @@ const editToDos = async (req, res, next) => {
 
     try {
         const { toDoName, toDoPriority, endTime, assignedTo, checkList, createdBy, status } = req.body;
-       
+
 
         if (!toDoName || !toDoPriority || !endTime) {
             return res.status(400).send("Please fill all the fields!!!")
@@ -46,7 +46,7 @@ const addToDos = async (req, res, next) => {
 
     try {
         const { toDoName, toDoPriority, endTime, assignedTo, checkList, createdBy, status } = req.body;
-      
+
         if (!toDoName || !toDoPriority || !endTime) {
             return res.status(400).send("Please fill all the required fields!!!")
         }
@@ -105,20 +105,25 @@ const getToDoByUserId = async (req, res, next) => {
         }
 
 
+        if (filter == "all") {
+            const todos = await ToDos.find()
+                .or([{ assignedTo: userId }, { createdBy: userId }, { assignedTo: user.email }])
+            res.status(200).send(todos)
+        } else {
+            const todos = await ToDos.find()
+                .or([{ assignedTo: userId }, { createdBy: userId }, { assignedTo: user.email }])
+                .and([{
+                    endTime: {
+                        $gte: normalizedDate,
+                        $lt: nextDay
+                    }
+                }])
 
-        const todos = await ToDos.find()
-            .or([{ assignedTo: userId }, { createdBy: userId }, { assignedTo: user.email }])
-            .and([{
-                endTime: {
-                    $gte: normalizedDate,
-                    $lt: nextDay
-                }
-            }])
 
 
 
-
-        res.status(200).send(todos)
+            res.status(200).send(todos)
+        }
 
     } catch (error) {
         console.log(error)
@@ -144,6 +149,8 @@ const getAnalytics = async (req, res, next) => {
         let LOW = 0;
         let MODERATE = 0;
         let DUE = 0;
+        const normalizedDate = normalizeToDate(new Date())
+        const nextDay = new Date(normalizedDate);
 
         todos.map((task) => {
             task.status == "BACKLOG" && ++BACKLOG
@@ -153,7 +160,7 @@ const getAnalytics = async (req, res, next) => {
             task.toDoPriority == "HIGH" && ++HIGH
             task.toDoPriority == "MODERATE" && ++MODERATE
             task.toDoPriority == "LOW" && ++LOW
-            task.dueDate?.length > 0 && ++DUE
+            task.endTime < nextDay && ++DUE
         })
 
         let analytics = {
