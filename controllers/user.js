@@ -9,7 +9,7 @@ const createUser = async (req, res, next) => {
 
     try {
         const { email, name, password } = req.body;
-        console.log(email, name, password)
+
         if (!email || !name || !password) {
             return res.status(400).send("Please fill all the fields!!!")
         }
@@ -21,7 +21,7 @@ const createUser = async (req, res, next) => {
         })
 
         let a = await newUser.save();
-        console.log("user Created", a.id)
+    
         
         const newBoard = new Board({
             owner: a.id,
@@ -32,7 +32,7 @@ const createUser = async (req, res, next) => {
         
 
     } catch (err) {
-        console.log("eeeee", err)
+   
 
         err.errorResponse.code == 11000 && res.status(409).send("Email Already Exists")
         next(err)
@@ -117,7 +117,7 @@ const updateUser = async (req, res, next) => {
             const hashedPassword = await bcrypt.hash(password, 10);
             await User.findByIdAndUpdate(id, { email, name, password: hashedPassword })
             let user = await User.findById(id)
-            console.log(user, "uuuuuu")
+      
             let userDetails = {
                 name: user.name,
                 email: user.email,

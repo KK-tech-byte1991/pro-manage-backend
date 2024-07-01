@@ -25,7 +25,7 @@ const editToDos = async (req, res, next) => {
 
     try {
         const { toDoName, toDoPriority, endTime, assignedTo, checkList, createdBy, status } = req.body;
-        console.log(toDoName, toDoPriority, endTime, assignedTo, checkList, createdBy)
+       
 
         if (!toDoName || !toDoPriority || !endTime) {
             return res.status(400).send("Please fill all the fields!!!")
@@ -46,7 +46,7 @@ const addToDos = async (req, res, next) => {
 
     try {
         const { toDoName, toDoPriority, endTime, assignedTo, checkList, createdBy, status } = req.body;
-        console.log(toDoName, toDoPriority, endTime, assignedTo, checkList, createdBy, checkList)
+      
         if (!toDoName || !toDoPriority || !endTime) {
             return res.status(400).send("Please fill all the required fields!!!")
         }
@@ -104,7 +104,7 @@ const getToDoByUserId = async (req, res, next) => {
             nextDay.setDate(normalizedDate.getDate() + 7);
         }
 
-        console.log(normalizedDate, nextDay);
+
 
         const todos = await ToDos.find()
             .or([{ assignedTo: userId }, { createdBy: userId }, { assignedTo: user.email }])

@@ -24,7 +24,7 @@ const addUserToBoard = async (req, res, next) => {
         let user = await User.findOne({ email });
         let affilitationToBeAdded
         let affiliation = board.affiliation
-        console.log("////",affiliation.find((aff) => aff.email == email))
+      
         if (affiliation.find((aff) => aff.email == email)) {
             res.status(200).send("Email Already Exists.")
         } else {
